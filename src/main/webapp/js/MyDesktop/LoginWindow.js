@@ -1,0 +1,200 @@
+Ext.define('MyDesktop.LoginWindow', {
+	extend: 'Ext.window.Window',
+	draggable: true,
+	height: 308,
+	hidden: false,
+	id:'login',
+	width: 409,
+	modal : true,
+	closable: false,
+	title: '<font size=3 face="华文楷体">视频网站登入系统</font>',
+	titleAlign: 'center',
+	expandOnShow: false,
+	initComponent: function() {
+    	var me = this;
+    	Ext.applyIf(me, {
+    		items: [{
+                xtype: 'form',
+                id : "loginform",
+                height: 273,
+                defaults: {
+                    labelWidth: 40
+                },
+                layout: {
+                    type: 'absolute'
+                },
+                bodyPadding: 10,
+                items: [{
+                        xtype: 'textfield',
+                        x: 160,
+                        y: 40,
+                        id: 'userid',
+                        width: 220,
+                        name: 'userid',
+                        fieldLabel: '账号',
+                        allowBlank: false,
+                        emptyText: '请输入您的账号',
+                        maxLength: 19,
+                        minLength: 6,
+                        vtype: 'alphanum'
+                    },{
+                        xtype: 'textfield',
+                        x: 160,
+                        y: 90,
+                        id: 'password',
+                        width: 220,
+                        inputType: 'password',
+                        name: 'password',
+                        fieldLabel: '密码',
+                        emptyText: '请输入您的密码',
+                        allowBlank: false,
+                        maxLength: 20,
+                        minLength: 7
+                    },{
+                        xtype: 'displayfield',
+                        x: 0,
+                        y: -3,
+                        height: 271,
+                        width: 150,
+                        value: "<img src='js/MyDesktop/wallpapers/login.png' />",
+                        fieldLabel: ''
+                    },{
+                    	xtype : 'textfield',
+                    	x : 160,
+    					y : 140,
+    					width : 125,
+    					name:'vcode',
+    					id:'vcode',
+    					labelWidth : 50,
+    					allowBlank : false,
+    					blankText : '请输入验证码',
+    					emptyText : '验证码',
+    					fieldLabel : '验证码'
+                    },{
+                    	xtype : 'image',
+    					x : 300,
+    					y : 135,
+    					height : 30,
+    					width : 80,
+    					id:'image',
+    					src: 'kaptcha.jpg'
+                    },{
+                        xtype: 'button',
+                        id:'wms_web_login',
+                        x: 180,
+                        y: 200,
+                        height: 30,
+                        width: 70,
+                        text: '登陆',
+                        handler:me.onSubmitClick
+                    },{
+                        xtype: 'button',
+                        x: 290,
+                        y: 200,
+                        height: 30,
+                        width: 70,
+                        text: '注册',
+                        handler:function(){
+                    		Ext.getCmp('login').close();
+                    		Ext.create('MyDesktop.Register').show();
+                    	}
+                    },{
+                        xtype: 'displayfield',
+                        x: 140,
+                        y: 240,
+                        height: 30,
+                        id: 'ip',
+                        width: 260,
+                        value: 'IP:'+returnCitySN.cip +' 地点:'+returnCitySN.cname+"&nbsp;"
+                    },{
+                    	xtype: 'displayfield',
+                    	x: 180,
+                    	y: 165,
+                    	height: 30,
+                    	width: 250,
+                    	id:'logininfo',
+                    	value:''
+                    }]
+            }]
+    	});
+    	me.callParent(arguments);
+	},
+	onShowComplete: function() {
+    	var me = this;
+    	
+    	new Ext.util.KeyMap({
+            target: me.getId(),
+            processEvent:function(self){
+            	self.winId = me.getId();
+            	return self;
+            },
+            binding: [{
+                key: Ext.EventObject.ENTER,
+                fn: function(key,eventobject,value){
+                	me.onSubmitClick(Ext.getCmp(eventobject.winId).query('form > button')[0]);
+                }
+            }]
+        });
+    	me.callParent(arguments);// call the superclass onRender method
+    },
+    onSubmitClick:function(btn){
+		var form = btn.ownerCt;
+		var basic = form.getForm();
+		if(basic.isValid()){
+			var userid = Ext.getCmp('userid').getValue();
+			var password = Ext.getCmp('password').getValue();
+			var pro = MyDesktop.LoginWindow.Progress();
+			Ext.Ajax.request({
+				url : "user_login.action",
+				method : "POST",
+				timeout : 10000,
+				params : {
+					'user.id' : userid,
+					'user.password' : password,
+					'user.ip':returnCitySN.cip,
+					'vcode':Ext.getCmp('vcode').getValue()
+				},
+				success : function(response, opts) {
+					pro.close();//滚动条消失
+					if (Ext.JSON.decode(response.responseText).message == "success") {
+						Ext.getCmp('login').close();
+						sessionStorage.setItem('user_id',userid);
+						sessionStorage.setItem('user_name',Ext.JSON.decode(response.responseText).username);
+						sessionStorage.setItem('user_creadit',Ext.JSON.decode(response.responseText).creadit);
+						self.location.href="index.jsp";
+					}else{	
+						Ext.getCmp('loginform').getForm().reset();
+						Ext.getCmp('logininfo').setValue('<font color=red size=3 face="华文楷体">'+Ext.JSON.decode(response.responseText).message+'.</font>');
+						Ext.getCmp('image').setSrc('kaptcha.jpg?t='+Math.floor(Math.random()*1000));
+					}
+				},
+				failure:function(response,options){
+	    			pro.close();//滚动条消失
+	    			Ext.Msg.alert('错误','网络错误！server-side failure with status code'+response.status);
+	    			basic.reset();
+	    		}
+			});
+		}else{
+			Ext.getCmp('logininfo').setValue('<font color=red size=3 face="华文楷体">请按要求输入账号和密码.</font>');
+		}
+	}
+});
+MyDesktop.LoginWindow.Progress = function(){
+	return Ext.Msg.show({
+	    title: '提示',
+	    progressText: '正在登陆中，请稍等...',
+	    width: 300,
+	    wait:true,
+	    modal:true,
+	    progress:true,
+	    prompt:false,
+	    closable:false,
+	    waitConfig:{
+	    	interval: 500, //bar will move fast!
+	    	increment: 15,
+	    	text: '正在登陆中，请稍等...',
+	    	scope: this
+	    },
+	    icon: Ext.window.MessageBox.INFO
+	});
+};

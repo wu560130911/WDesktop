@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+ <head>
+	<meta charset="UTF-8">
+	<title>Player</title>
+ 	<!-- <script type="text/javascript">jwplayer.key="X69k8WbNruK3m6DTRWoHO/eZrBZm/Y1K5sIG1Q==";</script> -->
+ 	<script type="text/javascript" src="js/player/jwplayer.js"></script>
+ </head>
+ <body>
+	<div id="myElement">Loading the player...</div>
+	<script type="text/javascript">
+    	jwplayer("myElement").setup({
+    		file: "Movie/12.mp4",
+      	  	image:"MovieImages/video.png",
+      	  	width: "100%",
+      	  	aspectratio: "12:5",
+            title:"相信未来",
+            logo:{
+            	hide:true
+            },
+            listbar: {
+        		position: 'right',
+        		size: 220
+    		},
+            playlist:[{
+            	file: "video/12.mp4",
+      	  		image:"video/12.jpg",
+      	  		title:"相信未来",
+      	  		description:"朗诵诗歌《相信未来》",
+      	  		type:"mp4"
+            },{
+      	  		image:"video/12.jpg",
+      	  		sources: [{
+      	  			file: "video/12.mp4",
+      	  			label: "360p"
+      	  		},{
+      	  			file: "video/12.mp4",
+      	  			label: "720p HD"
+      	  		}],
+      	  		title:"相信未来",
+      	  		description:"朗诵诗歌《相信未来》朗诵诗歌《相信未来》朗诵诗歌《相信未来》朗诵诗歌《相信未来》朗诵诗歌《相信未来》",
+      	  		type:"mp4"
+            }]
+    	});
+	</script>
+ </body>
+</html>
