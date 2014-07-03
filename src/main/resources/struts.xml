@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<constant name="struts.devMode" value="false" />
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+
+	<package name="user" extends="json-default,struts-default"
+		namespace="/">
+
+		<interceptors>
+			<interceptor-stack name="MyDefaultStack">
+				<interceptor-ref name="json"></interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+
+		<default-interceptor-ref name="MyDefaultStack"></default-interceptor-ref>
+
+		<action name="user_*" class="UserBaseAction" method="{1}">
+			<result name="login" type="json">
+				<param name="includeProperties">message.*,username.*,creadit.*</param>
+			</result>
+		</action>
+		<action name="music_*" class="MusicAction" method="{1}">
+			<result name="success" type="json">
+				<param name="includeProperties">message.*,musics.*,total</param>
+			</result>
+		</action>
+		<action name="movie_*" class="MovieAction" method="{1}">
+			<result name="success" type="json">
+				<param name="includeProperties">message.*,movies.*,total</param>
+			</result>
+		</action>
+
+		<action name="note_*" class="NoteBookAction" method="{1}">
+			<result name="success" type="json">
+				<param name="includeProperties">message.*,note.*,notes.*,total</param>
+			</result>
+		</action>
+
+		<action name="movieplaylist_*" class="MoviePlaylistAction"
+			method="{1}">
+			<result name="success" type="json">
+				<param name="includeProperties">message.*,datas.*</param>
+			</result>
+		</action>
+
+		<action name="userapp_*" class="UserAppAction" method="{1}">
+			<result name="success" type="json">
+				<param name="includeProperties">message.*,atws.*</param>
+			</result>
+		</action>
+	</package>
+	<package name="theme" extends="json-default,struts-default"
+		namespace="/theme">
+		<action name="themeaction_*" class="ThemeAction" method="{1}">
+			<result name="success" type="json">
+				<param name="includeProperties">message.*,themes.*</param>
+			</result>
+		</action>
+	</package>
+</struts>
