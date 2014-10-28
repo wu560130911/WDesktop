@@ -32,11 +32,11 @@
 			<artifactId>ehcache-core</artifactId>
 			<version>${ehcache.version}</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.google.code</groupId>
 			<artifactId>kaptcha</artifactId>
 			<version>2.3.2-20131019</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>druid</artifactId>
@@ -57,11 +57,11 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>net.sf</groupId>
 			<artifactId>log4jdbc</artifactId>
 			<version>1.2.1</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>ognl</groupId>
 			<artifactId>ognl</artifactId>
