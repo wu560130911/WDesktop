@@ -1,6 +1,6 @@
 /**
  * 
- *//*
+ */
 package com.wms.movie.test.service;
 
 import java.util.Date;
@@ -17,10 +17,10 @@ import com.wms.movie.model.User;
 import com.wms.movie.service.ApplicationService;
 import com.wms.movie.service.UserService;
 
-*//**
+/**
  * @author WMS
  *
- *//*
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:applicationContext.xml" })
 public class ApplicationTest {
@@ -50,4 +50,3 @@ public class ApplicationTest {
 		}
 	}
 }
-*/
